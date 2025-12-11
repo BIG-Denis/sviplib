@@ -8,7 +8,7 @@ Collection of multiple RAM (and one ROM) modules.
 
 ### ROM - simple, single-port, 1-cycle
 
-Read-only memory with syncronous read port with 1 cycle _addr2data_ trip. Can be initialized from memory file.
+Read-only memory with synchronous read port with 1 cycle _addr2data_ trip. Can be initialized from memory file.
 
 Source located in `rtl/rom_s1p1c.sv`.
 
@@ -21,13 +21,44 @@ rom_s1p1c #(
   .INIT_FILE_BIN (0  ),
   .INIT_FILE     ("" )
 ) rom_instance_name (
-  clk_i  (clk ),
-  rstn_i (rstn),
+  .clk_i  (clk ),
+  .rstn_i (rstn),
 
-  addr_i (addr),  // ADDR_WIDTH = $clog2(WORD_COUNT)
-  data_o (data)
+  .addr_i (addr),  // ADDR_WIDTH = $clog2(WORD_COUNT)
+  .data_o (data)
 );
 ```
+
+If no `INIT_FILE` provided, no memory initialization will be completed.
+
+By default, hexadecimal memory file format is used, if `INIT_FILE_BIN` is set to 1, then `INIT_FILE` will be interprented as binary format.
+
+### RAM - simple, single-port, 1-cycle
+
+Read-write memory with synchronous read/write port with 1 cycle _addr2data_ trip. Can be initialized from memory file.
+
+Source located in `rtl/ram_s1p1c.sv`.
+
+Instance:
+
+```systemverilog
+ram_s1p1c #(
+  .WORD_WIDTH    (8  ),
+  .WORD_COUNT    (256),
+  .INIT_FILE_BIN (0  ),
+  .INIT_FILE     ("" )
+) ram_instance_name (
+  .clk_i  (clk  ),
+  .rstn_i (rstn ),
+
+  .we_i   (we   ),
+  .addr_i (addr ),  // ADDR_WIDTH = $clog2(WORD_COUNT)
+  .data_i (wdata),
+  .data_o (rdata)
+);
+```
+
+This is a **read-first** memory. When writing, data from cycle before write is presented at read port.
 
 If no `INIT_FILE` provided, no memory initialization will be completed.
 

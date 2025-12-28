@@ -46,6 +46,6 @@ initial begin
 end
 
 assert property (@(posedge clk) disable iff (!rstn_i) !$isunknown(we_a_i)) else $error("we_a_i must always be known");
-assert property (@(posedge clk) disable iff (!rstn_i) we_i |-> !$isunknown(addr_i)) else $error("addr_a_i must be known when we_a_i is high");
+assert property (@(posedge clk) disable iff (!rstn_i) we_a_i |-> !$isunknown(addr_a_i)) else $error("addr_a_i must be known when we_a_i is high");
 
 endmodule

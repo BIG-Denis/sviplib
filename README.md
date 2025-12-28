@@ -9,3 +9,16 @@ Most of blocks presented here are targetted to be as simple as possible with a l
 Feel free to use all of this block in any of your projects.
 
 ## Presented IPs
+
+### RAM collection
+
+IP collections that contains multiple RAM models which can be used for FPGA synthesis or behavovour simulation.
+
+[Click here to go to documentatuin to IP](ramcollection/ramcollection.md).
+
+Modules in collection:
+
+* single port ROM
+* single port RAM
+* simple dual port RAM
+* true dual port RAM

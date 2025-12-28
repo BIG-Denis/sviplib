@@ -29,11 +29,11 @@ initial begin
   if (INIT_FILE != "") begin
     if (INIT_FILE_BIN) begin
       $display("Initializing RAM with bin file: %s...", INIT_FILE);
-      $readmemb(INIT_FILE, rom);
+      $readmemb(INIT_FILE, ram);
     end
     else begin
       $display("Initializing RAM with hex file: %s...", INIT_FILE);
-      $readmemh(INIT_FILE, rom);
+      $readmemh(INIT_FILE, ram);
     end
   end
 end

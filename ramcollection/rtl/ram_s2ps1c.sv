@@ -1,4 +1,4 @@
-module ram_s1p1c #(
+module ram_s2p1c #(
   parameter  int unsigned WORD_WIDTH      = 8,
   parameter  int unsigned WORD_COUNT      = 256,
   parameter  bit          INIT_FILE_BIN   = 0,
@@ -45,7 +45,7 @@ initial begin
   end
 end
 
-assert property (@(posedge clk) disable iff (!rstn_i) !$isunknown(we_a_i)) else $error("we_a_i must always be known");
-assert property (@(posedge clk) disable iff (!rstn_i) we_a_i |-> !$isunknown(addr_a_i)) else $error("addr_a_i must be known when we_a_i is high");
+assert property (@(posedge clk_i) disable iff (!rstn_i) !$isunknown(we_a_i)) else $error("we_a_i must always be known");
+assert property (@(posedge clk_i) disable iff (!rstn_i) we_a_i |-> !$isunknown(addr_a_i)) else $error("addr_a_i must be known when we_a_i is high");
 
 endmodule

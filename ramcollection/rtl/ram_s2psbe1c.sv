@@ -28,10 +28,10 @@ always_ff @( posedge clk_i ) begin
   if (we_a_i) begin
     for (int i = 0; i < BYTES_IN_WORD; i++) begin
       if (be_a_i[i]) begin
-      ram[addr_a_i][BYTE_WIDTH * i +: BYTE_WIDTH] <= data_a_i[BYTE_WIDTH * i +: BYTE_WIDTH];
+        ram[addr_a_i][BYTE_WIDTH * i +: BYTE_WIDTH] <= data_a_i[BYTE_WIDTH * i +: BYTE_WIDTH];
+      end
     end
   end
-end
 end
 
 // read port (b) driver
@@ -54,7 +54,8 @@ initial begin
 end
 
 assert property (@(posedge clk_i) disable iff (!rstn_i) !$isunknown(we_a_i)) else $error("we_a_i must always be known");
+assert property (@(posedge clk_i) disable iff (!rstn_i) we_a_i |-> !$isunknown(be_a_i))   else $error("be_a_i must be known when we_a_i is high");
 assert property (@(posedge clk_i) disable iff (!rstn_i) we_a_i |-> !$isunknown(addr_a_i)) else $error("addr_a_i must be known when we_a_i is high");
-assert property (@(posedge clk_i) disable iff (!rstn_i) we_a_i |-> !$isunknown(be_a_i)) else $error("be_a_i must be known when we_a_i is high");
+assert property (@(posedge clk_i) disable iff (!rstn_i) we_a_i |-> !$isunknown(be_a_i))   else $error("be_a_i must be known when we_a_i is high");
 
 endmodule

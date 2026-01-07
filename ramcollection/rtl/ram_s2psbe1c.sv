@@ -24,12 +24,14 @@ logic [WORD_WIDTH - 1:0] ram [0:WORD_COUNT - 1];
 
 
 // write port (a) driver
-always_ff @( posedge clk ) begin
+always_ff @( posedge clk_i ) begin
   if (we_a_i) begin
     for (int i = 0; i < BYTES_IN_WORD; i++) begin
+      if (be_a_i[i]) begin
       ram[addr_a_i][BYTE_WIDTH * i +: BYTE_WIDTH] <= data_a_i[BYTE_WIDTH * i +: BYTE_WIDTH];
     end
   end
+end
 end
 
 // read port (b) driver

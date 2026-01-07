@@ -96,3 +96,39 @@ This is a **read-first** memory. When writing, data from cycle before write is p
 If no `INIT_FILE` provided, no memory initialization will be completed.
 
 By default, hexadecimal memory file format is used, if `INIT_FILE_BIN` is set to 1, then `INIT_FILE` will be interprented as binary format.
+
+### RAM - simple, simple dual-port, 1 cycle, with write byte-enable
+
+Read-write memory with two synchronous ports, one of them read-only, second one is write-only with byte-enable feature.
+One cycle to write data, one cycle to read data. Can be initialized from memory file.
+
+Source located in `rtl/ram_s2psbe1c.sv`.
+
+Instance:
+
+```systemverilog
+ram_s2psbe1c #(
+  .BYTE_WIDTH    (8  ),
+  .BYTES_IN_WORD (4  ),
+  .WORD_COUNT    (256),
+  .INIT_FILE_BIN (0  ),
+  .INIT_FILE     ("" )
+) ram_instance_name (
+  .clk_i   (clk   ),
+  .rstn_i  (rstn  ),
+
+  .we_a_i  (we    ),
+  .be_a_i  (be    ),  // BYTES_IN_WORD
+  .addr_a_i(addr_a),  // ADDR_WIDTH = $clog2(WORD_COUNT)
+  .data_a_i(data_a),  // WORD_WIDTH = BYTE_WIDTH * BYTES_IN_WORD
+
+  .addr_b_i(addr_b),  // ADDR_WIDTH = $clog2(WORD_COUNT)
+  .data_b_o(data_b)   // WORD_WIDTH = BYTE_WIDTH * BYTES_IN_WORD
+);
+```
+
+This is a **read-first** memory. When writing, data from cycle before write is presented at read port.
+
+If no `INIT_FILE` provided, no memory initialization will be completed.
+
+By default, hexadecimal memory file format is used, if `INIT_FILE_BIN` is set to 1, then `INIT_FILE` will be interprented as binary format.

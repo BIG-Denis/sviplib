@@ -20,7 +20,7 @@ logic [WORD_WIDTH - 1:0] ram [0:WORD_COUNT - 1];
 
 
 // write port (a) driver
-always_ff @( posedge clk ) begin
+always_ff @( posedge clk_i ) begin
   if (we_a_i) begin
     ram[addr_a_i] <= data_a_i;
   end

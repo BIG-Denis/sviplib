@@ -58,8 +58,9 @@ fifo_anyread #(
   .data_i  (wr_data ),  // WORD_CNT_PER_WRITE * WORD_WIDTH
   .ready_o (wr_ready),
 
-  .read_i  (rd_words),  // $clog2(WORD_CNT_PER_READ)
-  .data_o  (rd_data )   // WORD_CNT_PER_READ * WORD_WIDTH
+  .valid_o (rd_valid),
+  .data_o  (rd_data ),  // WORD_CNT_PER_READ * WORD_WIDTH
+  .read_i  (rd_words)   // $clog2(WORD_CNT_PER_READ)
 );
 ```
 

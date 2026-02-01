@@ -55,14 +55,14 @@ fifo_anyread #(
   .clear_i (clear   ),
 
   .valid_i (wr_valid),
-  .data_i  (wr_data ),  // WORD_CNT_PER_WRITE
+  .data_i  (wr_data ),  // WORD_CNT_PER_WRITE * WORD_WIDTH
   .ready_o (wr_ready),
 
-  .read_i  (rd_data ),  // $clog2(WR_PORT_WORD_CNT)
-  .data_o  (rd_data )   // WORD_CNT_PER_READ
+  .read_i  (rd_data ),  // $clog2(WORD_CNT_PER_READ)
+  .data_o  (rd_data )   // WORD_CNT_PER_READ * WORD_WIDTH
 );
 ```
 
 To make no read at current clock cycle set `rd_data` to zero.
 
-Keep in mind that this FIFO is likely to synthesize into register RAM, sp avoid making it to deep as it can drastically increase utilization.
+Keep in mind that this FIFO is likely to synthesize into register RAM, so avoid making it too deep as it can drastically increase utilization.

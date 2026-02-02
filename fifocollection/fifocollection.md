@@ -34,16 +34,17 @@ Instance:
 
 Additional comments.
 
-### AnyRead FIFO
+### AnyRW FIFO
 
-Advanced FIFO with valid-ready write interface, fixed write port width any read any word count at the time. Additional clear signal to flush FIFO.
+Advanced FIFO with any read and write per cycle.
+Additional clear signal to flush FIFO.
 
-Source located in `rtl/fifo_anyread.sv`.
+Source located in `rtl/fifo_anyrw.sv`.
 
 Instance:
 
 ```systemverilog
-fifo_anyread #(
+fifo_anyrw #(
   .WORD_WIDTH         (8 ),
   .WORD_CNT_PER_WRITE (8 ),
   .WORD_CNT_PER_READ  (4 ),
@@ -54,7 +55,7 @@ fifo_anyread #(
 
   .clear_i (clear   ),
 
-  .valid_i (wr_valid),
+  .write_i (wr_words),  // $clog2(WORD_CNT_PER_WRITE)
   .data_i  (wr_data ),  // WORD_CNT_PER_WRITE * WORD_WIDTH
   .ready_o (wr_ready),
 
@@ -65,5 +66,6 @@ fifo_anyread #(
 ```
 
 To make no read at current clock cycle set `rd_words` to zero.
+To make no write at current clock cycle set `wr_words` to zero.
 
 Keep in mind that this FIFO is likely to synthesize into register RAM, so avoid making it too deep as it can drastically increase utilization.

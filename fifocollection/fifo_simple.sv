@@ -65,13 +65,8 @@ always_ff @( posedge clk_i or negedge rstn_i ) begin : read_ptr_logic
   else begin
     if    ( flush_i ) read_ptr <= PTR_WIDTH'('b0);
     else if ( pop_i ) begin
-      if ( read_ptr < MAX_PTR ) begin
-        read_ptr               <= read_ptr_next;
-      end
-      else begin
-        read_ptr               <= PTR_WIDTH'('b0);
-        read_ptr_circle        <= ~read_ptr_circle;
-      end
+      read_ptr               <= read_ptr_next;
+      if ( read_ptr == MAX_PTR ) read_ptr_circle        <= ~read_ptr_circle;
     end
   end
 end
@@ -82,7 +77,7 @@ generate
   if ( EGRESS ) begin
     always_ff @( posedge clk_i ) data_o <= fifo_mem[read_ptr_next];
   end
-  else assign                    data_o  = fifo_mem[read_ptr_next];
+  else assign                    data_o  = fifo_mem[read_ptr];
 endgenerate
 
 

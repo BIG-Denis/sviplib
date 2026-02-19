@@ -1,7 +1,7 @@
 module fifo_simple #(
   parameter int unsigned FIFO_DATA_WIDTH = 32,
   parameter int unsigned WORD_FIFO_DEPTH = 32,
-  // parameter bit          EGRESS          = 0
+  parameter bit          EGRESS          = 1
 )(
   input  logic                         clk_i,
   input  logic                         rstn_i,
@@ -11,11 +11,10 @@ module fifo_simple #(
   input  logic                         push_i,
 
   input  logic                         pop_i,
-  output logic [FIFO_DATA_WIDTH - 1:0] data_o,
+  output logic [FIFO_DATA_WIDTH - 1:0] data_o
 );
 
-localparam PTR_WIDTH = $clog2( FIFO_DATA_DEPTH );
-localparam max_ptr   = PTR_WIDTH' ( FIFO_DATA_DEPTH - 1 );
+localparam PTR_WIDTH = $clog2( WORD_FIFO_DEPTH );
 
 ////   LOCAL VARIABLES   ////
 
@@ -23,14 +22,17 @@ logic [PTR_WIDTH:0] write_ptr;
 logic [PTR_WIDTH:0] read_ptr;
 logic write_ptr_circle, read_ptr_circle;
 
-logic [FIFO_DATA_WIDTH - 1:0] fifo_mem [FIFO_DATA_DEPTH - 1:0];
+logic [FIFO_DATA_WIDTH - 1:0] fifo_mem [WORD_FIFO_DEPTH - 1:0];
 
 
 ////     INNER LOGIC     ////
 
-always_ff @( posedge clk_i ) begin : write_ptr_logic
+assign write_ptr_circle = write_ptr[PTR_WIDTH];
+assign read_ptr_circle  =  read_ptr[PTR_WIDTH];
+
+always_ff @( posedge clk_i or negedge rstn_i ) begin : write_ptr_logic
   if ( ~rstn_i ) begin
-    write_ptr <= <= PTR_WIDTH'('b0);
+    write_ptr <= PTR_WIDTH'('b0);
   end
   else begin
     if ( flush_i ) write_ptr <= PTR_WIDTH'('b0);
@@ -41,9 +43,9 @@ always_ff @( posedge clk_i ) begin : write_ptr_logic
   end
 end
 
-always_ff @( posedge clk_i ) begin : read_ptr_logic
+always_ff @( posedge clk_i or negedge rstn_i ) begin : read_ptr_logic
   if ( ~rstn_i ) begin
-    read_ptr <= <= PTR_WIDTH'('b0);
+    read_ptr <= PTR_WIDTH'('b0);
   end
   else begin
     if    ( flush_i ) write_ptr <= PTR_WIDTH'('b0);
@@ -57,7 +59,7 @@ generate
   if ( EGRESS ) begin
     always_ff @( posedge clk_i ) data_o <= fifo_mem[read_ptr];
   end
-  else                           data_o  = fifo_mem[read_ptr];
+  else assign                    data_o  = fifo_mem[read_ptr];
 endgenerate
 
 
